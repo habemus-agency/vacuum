@@ -9,7 +9,7 @@ Currently in alpha.
 
 ```
 
-$ composer require habemus/vacuum
+$ composer require habemus/vacuum-cleaner
 
 ```
 
