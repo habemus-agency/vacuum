@@ -1,6 +1,8 @@
-# Vacuum: Data validation
+# Vacuum: Data validation library
 
-Vacuum is a lightweight standalone library for data validation, heavily based on Laravel Validation.
+Vacuum is a light-weight standalone library for data validation, heavily based on Laravel Validation.
+
+Currently in alpha.
 
 
 ## Installation
