@@ -103,6 +103,9 @@ class FileUpload {
 		return $this->name;
 	}
 
+	public function getFilename(){
+		return $this->filename . '.' . $this->extension;
+	}
 
 	public function getMime(){
 		return $this->type;
@@ -125,6 +128,10 @@ class FileUpload {
 		}
 
 		return false;
+	}
+
+	public function store($path){
+		return copy($this->tmp_path,$path);
 	}
 
 
