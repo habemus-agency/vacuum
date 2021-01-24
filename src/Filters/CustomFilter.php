@@ -29,16 +29,22 @@ class CustomFilter {
 
 
 
-		if(!is_null($sanitizer) && !($sanitizer instanceof Closure)){
-			throw new InvalidArgumentException('Invalid Sanitizer.');
+		if(!is_null($sanitizer)){
+
+			if($sanitizer instanceof Closure){
+
+				$reflection = new ReflectionFunction($sanitizer);
+				$arguments  = $reflection->getParameters();
+		
+				if(count($arguments) != 1){
+					throw new InvalidArgumentException('Invalid parameters: 1 expected ($value).');
+				}
+			}else{
+				throw new InvalidArgumentException('Invalid Sanitizer.');
+			}
 		}
 
-		$reflection = new ReflectionFunction($sanitizer);
-		$arguments  = $reflection->getParameters();
 
-		if(count($arguments) != 1){
-			throw new InvalidArgumentException('Invalid parameters: 1 expected ($value).');
-		}
 
 
 

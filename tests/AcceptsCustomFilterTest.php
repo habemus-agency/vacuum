@@ -37,16 +37,27 @@ final class AcceptsCustomFilterTest extends TestCase {
         $this->assertTrue($validator->isValid());
 
 
+        $myFilter2 = new CustomFilter(function($value){
+
+            if(strpos($value,'Apple') !== false){
+                return true;
+            }
+
+            return false;
+        },function ($value){
+            return str_replace(' ','',$value);
+        },true);
 
         $validator->validate([
             'another_field' => [
                 'required',
                 'string',
-                $myFilter,
+                $myFilter2,
+                'alpha'
             ],
         ]);
 
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($validator->isValid());
 
     }
 }
