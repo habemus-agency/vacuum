@@ -21,7 +21,7 @@ trait Attributes {
 		return is_string($value) && preg_match('/^[\pL\pM]+$/u', $value);
 	}
 
-	private function filter_slug($slug){
+	private function filter_slug($value){
 		return preg_match('/^[a-z0-9\-]/',$value);
 	}
 
