@@ -3,6 +3,7 @@ namespace Habemus\Vacuum;
 
 use Symfony\Component\Mime\MimeTypes;
 use \RuntimeException;
+use \UnexpectedValueException;
 
 class FileUpload {
 	//native data
@@ -72,7 +73,7 @@ class FileUpload {
 			$this->extension = (new MimeTypes)->getExtensions($this->type)[0] ?? null;
 
 			if(is_null($this->extension)){
-				throw new Exception("MimeType not supported");
+				throw new UnexpectedValueException("MimeType not supported");
 			}
 
 			//rename file with original filename and correct extension

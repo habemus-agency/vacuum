@@ -36,7 +36,7 @@ $validated = $validator->validate([
 
 ### Results
 
-To check if input has validated use isValid() method.
+To check if input has validated use isValid() method. The `validate()` method returns data that has validated succesfully, even if not all of the input data has not been validated.
 
 ```php
 
@@ -47,10 +47,9 @@ $validated = $validator->validate([
 
 if($validator->isValid()){
 
-    //you can always retrieve validated data
-    $data = $validator->validated();
-
+    //handle $validated data
     ...
+
 
 }else{
 
@@ -102,12 +101,13 @@ $validator->validate([
 * **boolean** - field must be a valid boolean. Values accepted are `true`,`false`,`0`,`1`,`'true'`,`'false'`.
 * **string** - field must be a string.
 * **date** - field must be a valid date.
+* **slug** - field must contain only lowercase letters, numbers and `-`.
 
 
 ### Custom Filter
 
 It's possible to write your own filter using CustomFilter::class. 
-The class constructor accepts a Closure as parameter.
+The class constructor accepts a `Closure` as parameter.
 The Closure must have one $value parameter and must return either `true` on validation or `false` on failure.
 
 ```php
@@ -137,6 +137,29 @@ $data = $validator->validate([
 ]);
 ```
 
+Custom Filters also has the capability of running sanitize function on data being evaluated.
+Just pass the sanitizing function (`Closure`) as second parameter to the constructor.
+
+```php
+
+$mySpaceRemoverFilter = new CustomFilter(
+    function($value){
+        if(is_string($value)){
+            return true;
+        }
+
+        return false;
+    },
+    function($value){
+        return str_replace(' ','',$value);
+    },
+    true
+);
+```
+
+The third optional parameter (`true` or `false`) is to instruct Cleaner::class instance to execute the sanitizing function after filter validation.
+Otherwise sanitizing functions are always executed first.
+
 
 ## FileUpload
 
@@ -156,5 +179,68 @@ If you intend to keep the uploaded file it's mandatory to call the method store(
 * **getMime()** - returns file mime type
 
 
+## Error Messages
+
+To retrieve messages use `errors()`.
+
+```php
+
+$errors = $validator->errors();
+
+/*
+//output
+$errors = [
+    'field1_name' => [
+        'filter1_name' => 'Error Message',
+        'filter2_name' => 'Error Message',
+    ],
+    'field2_name' => [
+        'filter1_name' => 'Error Message',
+        'filter2_name' => 'Error Message',
+    ],
+];
+
+*/
+
+```
+
+This way you can check if field is present and which error has occurred.
+It's also possibile to specify a custom error message for a specific field by passing an `array` with custom messages as third parameter to Cleaner::class constructor.
+
+```php
+
+$custom_messages = [
+    'field1_name' => 'Il campo non è valido!',
+    'field2_name' => 'You can use ###field### placeholder.',
+];
+
+$validator = new Cleaner($input_array,$custom_messages_array);
+
+```
+
+
+### Other options
+
+It's possible to sanitize all fields by passing a `Closure` as third parameter on Cleaner init.
+
+```php
+
+$sanitize_all = function($value){
+
+    if(is_string($value)){
+        return trim($value);
+    }
+
+    return $value;
+};
+
+$validator = new Cleaner($input_array, $custom_messages_array, $sanitize_all);
+
+```
+
+
+Package developed by Habemus Agency in 2021.
+
+https://habemus.agency/it/
 
 

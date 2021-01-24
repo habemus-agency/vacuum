@@ -21,6 +21,10 @@ trait Attributes {
 		return is_string($value) && preg_match('/^[\pL\pM]+$/u', $value);
 	}
 
+	private function filter_slug($slug){
+		return preg_match('/^[a-z0-9\-]/',$value);
+	}
+
 
 	private function filter_email($value){
 		return filter_var($value,FILTER_VALIDATE_EMAIL);

@@ -12,7 +12,7 @@
             "email": "alberto@habemus.agency"
         }
     ],
-    "minimum-stability": "alpha",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "Habemus\\Vacuum\\": "src/"

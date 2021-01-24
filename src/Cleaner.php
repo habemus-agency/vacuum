@@ -2,6 +2,8 @@
 namespace Habemus\Vacuum;
 
 use \RuntimeException;
+use \BadMethodCallException;
+use \InvalidArgumentException;
 
 use Habemus\Vacuum\Filters\Attributes;
 use Habemus\Vacuum\Filters\Files;
@@ -36,15 +38,16 @@ class Cleaner {
 		'boolean' => '###field### is not boolean',
 		'string' => '###field### is not boolean',
 		'date' => '###field### is not a valid date',
-
 	];
+
+	protected $custom_messages = [];
 
 	protected $fields = null;
 	protected $validated = [];
 	protected $errors = null;
 	protected $is_valid = false;
 
-	public function __construct($fields,$sanitizer_callback = null,$custom_messages = null){
+	public function __construct($fields,$custom_messages = null,$sanitizer_callback = null){
 
 		if(!is_array($fields)){
 			throw new \Exception('Fields must be an array!');
@@ -89,9 +92,9 @@ class Cleaner {
 		if(!empty($custom_messages)){
 
 			if(!is_array($custom_messages)){
-				throw new \Exception('Messages must be an array!');
+				throw new InvalidArgumentException('Messages must be an array!');
 			}else{
-				$this->messages = $custom_messages;
+				$this->custom_messages = $custom_messages;
 			}
 
 		}
@@ -132,7 +135,7 @@ class Cleaner {
 						$params = $this->getFilterParams($filter);
 
 						if(!method_exists($this,'filter_' . $filter)){
-							throw new RuntimeException("Filter '$filter' doesn't exist.");
+							throw new BadMethodCallException("Filter '$filter' doesn't exist.");
 
 						}else{
 							
@@ -143,13 +146,23 @@ class Cleaner {
 						}
 					}elseif ($filter instanceof CustomFilter) {
 
+						//sanitize if flag after is not set
+						if(!$filter->executeAfter()){
+							$value = $filter->sanitize($value);
+						}
+
 						//validate if field is not nullable or if nullable but data is present
 						if(!$nullable or ($nullable && $this->filter_required($value))){
 							$error = !$filter->validate($value);
 						}
 
+						//sanitize if flag after is set
+						if($filter->executeAfter()){
+							$value = $filter->sanitize($value);
+						}
+
 					}else{
-						throw new RuntimeException("Filter is of invalid type.");
+						throw new InvalidArgumentException("Filter is of invalid type.");
 					}
 
 					if($error){
@@ -191,14 +204,22 @@ class Cleaner {
 		return $this->validated;
 	}
 
+	public function setDefaultMessage($message){
+		$this->default_message = $message;
+	}
+
 	private function getErrorMessage($filter,$field,$params){
 
 		$message = '';
 
-		if(!is_string($filter)){
-			$message = $this->default_message;
-		}else{
-			$message = array_key_exists($filter,$this->messages) ? $this->messages[$filter] : $this->default_message;
+		$message = array_key_exists($field,$this->custom_messages) ? $this->custom_messages[$field] : '';
+
+		if(empty($message)){
+			if(!is_string($filter)){
+				$message = $this->default_message;
+			}else{
+				$message = array_key_exists($filter,$this->messages) ? $this->messages[$filter] : $this->default_message;
+			}
 		}
 
 		$name = str_replace(['_','-'],' ',$field);
