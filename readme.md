@@ -2,8 +2,6 @@
 
 Vacuum is a light-weight standalone library for data validation, heavily based on Laravel Validation.
 
-Currently in alpha.
-
 
 ## Installation
 
