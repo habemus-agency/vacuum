@@ -13,8 +13,7 @@ $ composer require habemus/vacuum-cleaner
 
 ```
 
-
-## Basic Usage
+## Basic Usage: The Cleaner Object
 
 Instantiate Cleaner::class with input data and validate with built in filters.
 Cleaner::class accepts only arrays of data as input. Data can be of any native data type and objects. 
@@ -161,6 +160,29 @@ $mySpaceRemoverFilter = new CustomFilter(
 
 The third optional parameter (`true` or `false`) is to instruct Cleaner::class instance to execute the sanitizing function after filter validation.
 Otherwise sanitizing functions are always executed first.
+
+
+## The Request Object
+
+The `Request::class` is a small wrapper around the `Cleaner::class` validator instance that speeds up the process of validating HTTP requests data from forms.
+
+```php
+
+use Habemus\Vacuum\Request;
+
+$request = new Request(); //init from $_GET,$_POST,$_FILES global vars
+$request = new Request($custom_data); //init with custom data
+
+$validated_data = $request->validate([
+    //filters
+],$custom_validation_msgs = null,$sanitizer_fn = null); //basically same as Cleaner __construct method
+
+$request->isValid(); // true or false
+$request->getErrors(); //populated after validate()
+$request->getValidated(); //populated after validate()
+$request->getData(); // retrieve input data
+
+```
 
 
 ## FileUpload
