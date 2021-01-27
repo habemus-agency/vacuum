@@ -171,9 +171,7 @@ use Habemus\Vacuum\Request;
 $request = new Request(); //init from $_GET,$_POST,$_FILES global vars
 $request = new Request($custom_data); //init with custom data
 
-$validated_data = $request->validate([
-    //filters
-],$custom_validation_msgs = null,$sanitizer_fn = null); //basically same as Cleaner __construct method
+$validated_data = $request->validate($filters, $custom_validation_msgs = null, $sanitizer_fn = null); //validate data from request
 
 $request->isValid(); // true or false
 $request->getErrors(); //populated after validate()
