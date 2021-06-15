@@ -132,7 +132,7 @@ class FileUpload {
 	}
 
 	public function store($path){
-		return copy($this->tmp_path,$path);
+		return copy($this->tmp_name,$path);
 	}
 
 
