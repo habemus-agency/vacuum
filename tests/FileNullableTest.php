@@ -7,7 +7,7 @@ use Habemus\Vacuum\Cleaner;
 use Habemus\Vacuum\Filters\CustomFilter;
 use Habemus\Vacuum\FileUpload;
 
-final class FileUploadsTest extends TestCase {
+final class FileNullableTest extends TestCase {
 
     function test(){
 
@@ -33,11 +33,35 @@ final class FileUploadsTest extends TestCase {
         ]);
 
         $validated = $validator->validate([
-            'test_file' => 'required|file|max:100000|mimes:docx',
+            'test_file' => 'nullable|file|max:100000|mimes:docx',
+        ]);
+
+        
+
+        $this->assertFalse($validator->isValid());
+
+
+
+        $empty_file_data = [ 
+            'name' => 'testfile.pdf',
+            'tmp_name' => '',
+            'type' => null,
+            'error' => 4,
+            'size' => 0,
+        ];
+
+        $testfile = new FileUpload($empty_file_data);
+
+        $validator = new Cleaner([
+            'test_file' => $testfile,
+        ]);
+
+        $validated = $validator->validate([
+            'test_file' => 'nullable|file|max:100000|mimes:docx',
         ]);
 
 
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($validator->isValid());
 
     }
 }

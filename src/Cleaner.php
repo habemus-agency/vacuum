@@ -275,7 +275,7 @@ class Cleaner {
 		} elseif ((is_array($value) || $value instanceof Countable) && count($value) < 1) {
 				return false;
 		}elseif ($value instanceof FileUpload){
-			return (string) $value->getPath() !== '';
+			return !$value->isEmpty();
 		}
 
 		return true;
