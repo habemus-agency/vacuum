@@ -8,7 +8,11 @@ trait Files {
     /** files validation  */
 
 	private function filter_file($file){
-		return ($file instanceof FileUpload);
+		if($file instanceof FileUpload){
+			return is_uploaded_file($file->getPath());
+		}
+
+		return false;
     }
     
 
@@ -27,7 +31,7 @@ trait Files {
 
 	private function filter_mimes($file,$params){
 
-		if(!$this->filter_file($file)){
+		if(!($file instanceof FileUpload)){
 			return false;
 		}
 

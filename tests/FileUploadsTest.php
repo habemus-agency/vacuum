@@ -24,12 +24,10 @@ final class FileUploadsTest extends TestCase {
             'size' => filesize($file_path),
         ];
 
-        $this->assertFalse(FileUpload::isNativeFileUploadData($file_data));
-
-        $testfile = new FileUpload($file_data);
+        $this->assertTrue(FileUpload::isNativeFileUploadData($file_data));
 
         $validator = new Cleaner([
-            'test_file' => $testfile,
+            'test_file' => $file_data,
         ]);
 
         $validated = $validator->validate([

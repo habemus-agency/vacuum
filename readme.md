@@ -87,7 +87,7 @@ $validator->validate([
 * **numeric** - field must contain only numbers.
 * **digits:*size*** - field must contain only numbers characters and must be exact *size* long.
 * **mimes:*extension1,extension2,...*** - field must be a valid FileUpload and match the specified *extensions*. Extension is guessed by file Mime Type and it's binary data.
-* **file** - field must be valid FileUpload.
+* **file** - field must be valid file upload (uploaded from user).
 * **size:*value*** - field size must be of exact *value*. Works with arrays, strings and files.
 * **in:*value1,value2,...*** - field must be one of the specified values.
 * **gte:*value*** - field must be greater than or equal to *value*. Works with numbers.
