@@ -1,22 +1,18 @@
 <?php
 namespace Habemus\Vacuum\Filters;
 
-use Habemus\Vacuum\FileUpload;
+use Habemus\Vacuum\File;
 
 trait Files {
 
     /** files validation  */
 
 	private function filter_file($file){
-		if($file instanceof FileUpload){
-			return is_uploaded_file($file->getPath());
-		}
-
-		return false;
+		return ($file instanceof File);
     }
     
 
-    private function is_php_file(FileUpload $file){
+    private function is_php_file(File $file){
         $phpExtensions = [
             'php', 'php3', 'php4', 'php5', 'phtml',
         ];
@@ -31,7 +27,7 @@ trait Files {
 
 	private function filter_mimes($file,$params){
 
-		if(!($file instanceof FileUpload)){
+		if(!($file instanceof File)){
 			return false;
 		}
 

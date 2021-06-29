@@ -5,18 +5,13 @@ use Symfony\Component\Mime\MimeTypes;
 use \RuntimeException;
 use \UnexpectedValueException;
 
-class FileUpload {
+class FileUpload extends File {
 	//native data
 	protected $name;
 	protected $tmp_name;
 	protected $type;
 	protected $error;
 	protected $size;
-
-	//custom
-	protected $extension;
-	protected $filename; //name without extension
-	protected $path; //path without filename and extension
 
 
 	public static function isNativeFileUploadData($upload_data){
@@ -48,6 +43,10 @@ class FileUpload {
 		}
 
 		if(!$this->isEmpty()){
+
+			if(!is_uploaded_file($this->tmp_name)){
+				throw new \RuntimeException("Not a valid uploaded file.");
+			}
 
 			//get path
 			$exp_path = explode("/", $this->tmp_name);
@@ -104,23 +103,6 @@ class FileUpload {
 		return $this->name;
 	}
 
-	public function getFilename(){
-		return $this->filename . '.' . $this->extension;
-	}
-
-	public function getMime(){
-		return $this->type;
-	}
-
-
-	public function getExtension(){
-		return $this->extension;
-	}
-
-	public function getSize(){
-		return $this->size;
-	}
-
 	public function rename($new_path){
 
 		if(rename($this->tmp_name,$new_path)){
@@ -132,7 +114,11 @@ class FileUpload {
 	}
 
 	public function store($path){
-		return copy($this->tmp_name,$path);
+		if(copy($this->tmp_name,$path)){
+			return new File($path);
+		}
+
+		return false;
 	}
 
 

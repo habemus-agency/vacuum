@@ -6,15 +6,13 @@ use PHPUnit\Framework\TestCase;
 use Habemus\Vacuum\Cleaner;
 use Habemus\Vacuum\Filters\CustomFilter;
 use Habemus\Vacuum\FileUpload;
+use Habemus\Vacuum\File;
 
 final class FileUploadsTest extends TestCase {
 
     function test(){
 
-        $source = __DIR__ . '/test-files/habemus.png';
-        $file_path = __DIR__ . '/test-files/test_file.pdf';
-
-        $this->assertTrue(copy($source,$file_path));
+        $file_path = __DIR__ . '/test-files/habemus.png';
 
         $file_data = [ 
             'name' => 'testfile.pdf',
@@ -27,11 +25,24 @@ final class FileUploadsTest extends TestCase {
         $this->assertTrue(FileUpload::isNativeFileUploadData($file_data));
 
         $validator = new Cleaner([
-            'test_file' => $file_data,
+            'test_file' => new File($file_path),
         ]);
 
         $validated = $validator->validate([
             'test_file' => 'required|file|max:100000|mimes:docx',
+        ]);
+
+
+        $this->assertFalse($validator->isValid());
+
+
+        $validator = new Cleaner([
+            'test_file' => $file_data,
+        ]);
+
+
+        $validated = $validator->validate([
+            'test_file' => 'required|file|max:100000|mimes:png',
         ]);
 
 

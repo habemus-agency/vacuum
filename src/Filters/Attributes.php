@@ -3,7 +3,7 @@ namespace Habemus\Vacuum\Filters;
 
 use \Countable;
 use \DateTimeInterface;
-use Habemus\Vacuum\FileUpload;
+use Habemus\Vacuum\File;
 
 trait Attributes {
 
@@ -158,7 +158,7 @@ trait Attributes {
 	private function filter_max($value,$params){
 		$max = $this->getNumber(array_pop($params));
 
-		if($value instanceof FileUpload){
+		if($value instanceof File){
 			return $value->getSize() <= $max;
 		}
 
