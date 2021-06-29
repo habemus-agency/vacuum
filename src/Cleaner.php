@@ -70,7 +70,11 @@ class Cleaner {
 			if(is_array($v)){
 
 				if(FileUpload::isNativeFileUploadData($v)){
-					$v = new FileUpload($v);
+					try {
+						$v = new FileUpload($v);
+					}catch(RuntimeException $e){
+						$v = null;
+					}
 				}else{
 
 					$v = array_map(function($value) use ($sanitizer){
@@ -181,7 +185,7 @@ class Cleaner {
 			}
 
 
-			if($valid){
+			if($valid && $this->filter_required($value)){
 				$this->validated[$field] = $value;
 			}
 
@@ -274,7 +278,7 @@ class Cleaner {
 				return false;
 		} elseif ((is_array($value) || $value instanceof Countable) && count($value) < 1) {
 				return false;
-		}elseif ($value instanceof FileUpload){
+		}elseif ($value instanceof File){
 			return !$value->isEmpty();
 		}
 

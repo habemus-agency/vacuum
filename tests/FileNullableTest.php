@@ -6,18 +6,16 @@ use PHPUnit\Framework\TestCase;
 use Habemus\Vacuum\Cleaner;
 use Habemus\Vacuum\Filters\CustomFilter;
 use Habemus\Vacuum\FileUpload;
+use Habemus\Vacuum\File;
 
 final class FileNullableTest extends TestCase {
 
     function test(){
 
-        $source = __DIR__ . '/test-files/habemus.png';
-        $file_path = __DIR__ . '/test-files/test_file.png';
-
-        $this->assertTrue(copy($source,$file_path));
+        $file_path = __DIR__ . '/test-files/habemus.png';
 
         $file_data = [ 
-            'name' => 'testfile.png',
+            'name' => 'testfile.php',
             'tmp_name' => $file_path,
             'type' => mime_content_type($file_path),
             'error' => 0,
@@ -26,10 +24,10 @@ final class FileNullableTest extends TestCase {
 
         $this->assertTrue(FileUpload::isNativeFileUploadData($file_data));
 
-        $file = new FileUpload($file_data);
+        $file = new File($file_path);
 
         $validator = new Cleaner([
-            'test_file' => $file,
+            'test_file' => $file_data,
         ]);
 
         $validated = $validator->validate([
@@ -37,7 +35,7 @@ final class FileNullableTest extends TestCase {
         ]);
         
 
-        $this->assertFalse($validator->isValid());
+        $this->assertTrue($validator->isValid());
 
 
         $validator = new Cleaner([
@@ -47,6 +45,8 @@ final class FileNullableTest extends TestCase {
         $validated = $validator->validate([
             'test_file' => 'nullable|max:100000|mimes:png',
         ]);
+
+        $this->assertFalse($file->isEmpty());
 
         $this->assertTrue($validator->isValid());
 
