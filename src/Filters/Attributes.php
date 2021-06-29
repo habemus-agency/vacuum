@@ -158,7 +158,7 @@ trait Attributes {
 	private function filter_max($value,$params){
 		$max = $this->getNumber(array_pop($params));
 
-		if($this->filter_file($value)){
+		if($value instanceof FileUpload){
 			return $value->getSize() <= $max;
 		}
 

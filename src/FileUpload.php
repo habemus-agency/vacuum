@@ -22,7 +22,7 @@ class FileUpload {
 	public static function isNativeFileUploadData($upload_data){
 		if(is_array($upload_data)){
 			if(!array_diff([ 'name','type', 'tmp_name','error','size' ], array_keys($upload_data))){
-				return is_uploaded_file($upload_data['tmp_name']);
+				return true;
 			}
 		}
 
