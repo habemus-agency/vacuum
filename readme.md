@@ -198,6 +198,8 @@ If you intend to keep the uploaded file it's mandatory to call the method store(
 * **getExtension()** - returns file extension
 * **getMime()** - returns file mime type
 
+Now File and FileUpload are separate entities. tmp_path no longer exists, use getPath() instead.
+
 
 ## Error Messages
 
