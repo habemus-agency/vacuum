@@ -21,5 +21,6 @@
     },
     "require": {
         "symfony/mime": "^5.2"
-    }
+    },
+    "abandoned": "apdev/lawn-mower"
 }
