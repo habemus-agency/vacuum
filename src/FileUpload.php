@@ -35,11 +35,10 @@ class FileUpload extends File {
 
 		foreach ($php_native_file_data as $key => $value) {
 
-			if(!property_exists($this,$key)){
-				return;
+			if(property_exists($this,$key)){
+				$this->{$key} = $value;
 			}
 
-			$this->{$key} = $value;
 		}
 
 		if(!$this->isEmpty()){
